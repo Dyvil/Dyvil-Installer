@@ -6,6 +6,7 @@ import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.charset.StandardCharsets;
 
+
 public class StartupThread extends Thread
 {
 	@Override
@@ -18,6 +19,7 @@ public class StartupThread extends Thread
 		{
 			URL url = new URL("https://raw.githubusercontent.com/Dyvil/Dyvil-Installer/master/versions.txt");
 			ReadableByteChannel rbc = Channels.newChannel(url.openStream());
+			
 			ByteBuffer bytebuf = ByteBuffer.allocate(1024);
 			rbc.read(bytebuf);
 			String content = new String(bytebuf.array(), StandardCharsets.UTF_8);
@@ -82,7 +84,7 @@ public class StartupThread extends Thread
 		}
 		else if (os.contains("MAC"))
 		{
-			return "/Library/Dyvil";
+			return System.getProperty("user.home") + "/Library/Dyvil";
 		}
 		else if (os.contains("NUX"))
 		{

@@ -12,8 +12,8 @@ public class DyvilInstaller
 	private JFrame		frame;
 	public JLabel		labelVersion;
 	public JComboBox	comboBoxVersion;
-	public JCheckBox	checkBoxInstallDevTools;
 	public JCheckBox	checkBoxInstallREPL;
+	public JCheckBox	checkBoxInstallDevTools;
 	public JButton		buttonInstall;
 	public JButton		buttonCancel;
 	public JProgressBar	progressBarInstall;
@@ -98,13 +98,13 @@ public class DyvilInstaller
 		this.comboBoxVersion.setBounds(224, 40, 170, 27);
 		this.frame.getContentPane().add(this.comboBoxVersion);
 		
-		this.checkBoxInstallDevTools = new JCheckBox("Install the Dyvil Interactive REPL");
-		this.checkBoxInstallDevTools.setBounds(6, 100, 288, 23);
-		this.frame.getContentPane().add(this.checkBoxInstallDevTools);
-		
-		this.checkBoxInstallREPL = new JCheckBox("Install Dyvil Development Tools");
-		this.checkBoxInstallREPL.setBounds(6, 72, 288, 23);
+		this.checkBoxInstallREPL = new JCheckBox("Install the Dyvil Interactive REPL");
+		this.checkBoxInstallREPL.setBounds(6, 100, 288, 23);
 		this.frame.getContentPane().add(this.checkBoxInstallREPL);
+		
+		this.checkBoxInstallDevTools = new JCheckBox("Install Dyvil Development Tools");
+		this.checkBoxInstallDevTools.setBounds(6, 72, 288, 23);
+		this.frame.getContentPane().add(this.checkBoxInstallDevTools);
 		
 		this.buttonInstall = new JButton("Install");
 		this.buttonInstall.addActionListener(this::install);
