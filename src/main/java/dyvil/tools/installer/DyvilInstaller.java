@@ -44,6 +44,11 @@ public class DyvilInstaller
 		this.initialize();
 	}
 	
+	public static void addVersion(Version version)
+	{
+		instance.comboBoxVersion.addItem(version);
+	}
+	
 	public static void setInstallDirectory(String directory)
 	{
 		instance.textFieldInstallDir.setText(directory);
@@ -162,6 +167,6 @@ public class DyvilInstaller
 		boolean devTools = this.checkBoxInstallDevTools.isSelected();
 		boolean repl = this.checkBoxInstallREPL.isSelected();
 		File directory = new File(this.textFieldInstallDir.getText());
-		new InstallThread(version.toString(), directory, devTools, repl).start();
+		new InstallThread((Version) version, directory, devTools, repl).start();
 	}
 }
