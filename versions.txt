@@ -1,4 +1,4 @@
-0.0.1
-lib:https://drone.io/github.com/Clashsoft/Dyvil/files/build/libs/dyvil-library-0.1.0.nightly_134.jar
-repl:https://drone.io/github.com/Clashsoft/Dyvil/files/build/libs/dyvil-repl-0.1.0.nightly_134.jar
-compiler:https://drone.io/github.com/Clashsoft/Dyvil/files/build/libs/dyvil-compiler-0.1.0.nightly_134.jar
+0.1.0-ALPHA
+lib:https://github.com/Dyvil/Dyvil/releases/download/0.1.0/dyvil-library-0.1.0.jar
+repl:https://github.com/Dyvil/Dyvil/releases/download/0.1.0/dyvil-repl-0.1.0.jar
+compiler:https://github.com/Dyvil/Dyvil/releases/download/0.1.0/dyvil-compiler-0.1.0.jar
