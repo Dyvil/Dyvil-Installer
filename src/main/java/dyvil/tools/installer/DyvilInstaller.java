@@ -164,9 +164,17 @@ public class DyvilInstaller
 		
 		this.progressBarDownload.setStringPainted(true);
 		
-		boolean devTools = this.checkBoxInstallDevTools.isSelected();
-		boolean repl = this.checkBoxInstallREPL.isSelected();
 		File directory = new File(this.textFieldInstallDir.getText());
-		new InstallThread((Version) version, directory, devTools, repl).start();
+		
+		int components = 0;
+		if (this.checkBoxInstallDevTools.isSelected())
+		{
+			components |= InstallThread.DEV_TOOLS;
+		}
+		if (this.checkBoxInstallREPL.isSelected())
+		{
+			components |= InstallThread.REPL;
+		}
+		new InstallThread((Version) version, directory, components).start();
 	}
 }

@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+java -jar $DYVIL_HOME/lib/dyvil-repl.jar -classpath $DYVIL_HOME/lib/dyvil-compiler.jar $DYVIL_HOME/lib/dyvil-library.jar "$@"

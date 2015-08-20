@@ -3,19 +3,22 @@ package dyvil.tools.installer;
 import java.io.*;
 import java.net.URL;
 
+import javax.swing.JOptionPane;
+
 public class InstallThread extends Thread
 {
+	public static final byte	DEV_TOOLS	= 1;
+	public static final byte	REPL		= 2;
+	
 	private final Version	version;
 	private final File		installDirectory;
-	private final boolean	installDevTools;
-	private final boolean	installREPL;
+	private final int		components;
 	
-	public InstallThread(Version version, File installDirectory, boolean devTools, boolean repl)
+	public InstallThread(Version version, File installDirectory, int components)
 	{
 		this.version = version;
 		this.installDirectory = installDirectory;
-		this.installDevTools = devTools;
-		this.installREPL = repl;
+		this.components = components;
 	}
 	
 	@Override
@@ -24,42 +27,70 @@ public class InstallThread extends Thread
 		String version = this.version.identifier;
 		DyvilInstaller.setInstallMessage("Downloading Required Libraries for Dyvil v" + version);
 		File dir = new File(this.installDirectory, version);
+		File lib = new File(dir, "lib");
+		File bin = new File(dir, "bin");
+		File license = new File(dir, "license");
 		
-		downloadBin(dir, "Dyvil Library", this.version.libraryURL);
-		if (installDevTools || installREPL)
+		download(new File(lib, "dyvil-library.jar"), "Dyvil Library", this.version.libraryURL);
+		switch (this.components)
 		{
-			downloadBin(dir, "Dyvil Compiler", this.version.compilerURL);
+		case REPL | DEV_TOOLS:
+		case REPL:
+			download(new File(lib, "dyvil-repl.jar"), "Dyvil REPL Library", this.version.replURL);
+		case DEV_TOOLS:
+			download(new File(lib, "dyvil-compiler.jar"), "Dyvil Compiler Library", this.version.compilerURL);
 		}
-		if (installREPL)
+		
+		DyvilInstaller.setInstallMessage("Downloading Scripts");
+		switch (this.components)
 		{
-			downloadBin(dir, "Dyvil REPL", this.version.replURL);
+		case REPL | DEV_TOOLS:
+		case REPL:
+		{
+			File f = new File(bin, "dyvil");
+			download(f, "REPL Launcher", "https://raw.githubusercontent.com/Dyvil/Dyvil-Installer/master/scripts/dyvil");
+			f.setExecutable(true);
 		}
+		case DEV_TOOLS:
+		{
+			File f = new File(bin, "dyvilc");
+			download(f, "Compiler Launcher", "https://raw.githubusercontent.com/Dyvil/Dyvil-Installer/master/scripts/dyvilc");
+			f.setExecutable(true);
+		}
+		}
+		
+		DyvilInstaller.setInstallMessage("Downloading Text resources");
+		download(new File(license, "ASM-LICENSE.txt"), "ASM License", "https://raw.githubusercontent.com/Dyvil/Dyvil/master/ASM-LICENSE.txt");
+		download(new File(license, "LICENSE.txt"), "ASM License", "https://raw.githubusercontent.com/Dyvil/Dyvil/master/LICENSE.txt");
 		
 		DyvilInstaller.setDownloadMessage("");
-		DyvilInstaller.setInstallMessage("");
+		DyvilInstaller.setInstallMessage("Installation Successful");
 	}
 	
-	private static String fileName(String url)
+	private static void error(String message)
 	{
-		int index = url.lastIndexOf('/');
-		return index < 0 ? url : url.substring(index + 1);
+		JOptionPane.showMessageDialog(null, message, "Error during Installation", JOptionPane.ERROR_MESSAGE);
 	}
 	
-	private static void downloadBin(File dir, String name, String url)
-	{
-		File libFile = new File(dir, "bin/" + fileName(url));
-		download(name, url, libFile);
-	}
-	
-	private static void download(String name, String url, File dest)
+	private static boolean createFile(File file)
 	{
 		try
 		{
-			dest.createNewFile();
+			file.getParentFile().mkdirs();
+			file.createNewFile();
+			return true;
 		}
 		catch (IOException ex)
 		{
-			DyvilInstaller.setDownloadMessage("Failed to create file for " + name);
+			error("Failed to create " + file.getAbsolutePath() + ": " + ex.getMessage());
+		}
+		return false;
+	}
+	
+	private static void download(File dest, String name, String url)
+	{
+		if (!createFile(dest))
+		{
 			return;
 		}
 		
@@ -75,9 +106,14 @@ public class InstallThread extends Thread
 		}
 		catch (IOException ex)
 		{
-			DyvilInstaller.setDownloadMessage("Failed to download " + name);
+			error("Failed to download " + name + ": " + ex.getMessage());
 		}
 		
 		DyvilInstaller.setDownloadMessage("Successfully Downloaded " + name);
+	}
+	
+	private static void write(File dir, String text)
+	{
+	
 	}
 }

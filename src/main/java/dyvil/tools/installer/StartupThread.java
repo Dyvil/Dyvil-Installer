@@ -6,7 +6,6 @@ import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.charset.StandardCharsets;
 
-
 public class StartupThread extends Thread
 {
 	@Override
@@ -22,7 +21,7 @@ public class StartupThread extends Thread
 			
 			ByteBuffer bytebuf = ByteBuffer.allocate(1024);
 			rbc.read(bytebuf);
-			String content = new String(bytebuf.array(), StandardCharsets.UTF_8);
+			String content = new String(bytebuf.array(), 0, bytebuf.position(), StandardCharsets.UTF_8);
 			
 			int versions = readVersionFile(content);
 			DyvilInstaller.setInstallMessage("Fetched " + versions + " versions");
@@ -51,6 +50,11 @@ public class StartupThread extends Thread
 		Version version = null;
 		for (String s : lines)
 		{
+			if (s.isEmpty())
+			{
+				continue;
+			}
+			
 			int index = s.indexOf(':');
 			if (index < 0)
 			{
