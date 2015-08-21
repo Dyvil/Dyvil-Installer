@@ -8,12 +8,18 @@ import java.nio.charset.StandardCharsets;
 
 public class StartupThread extends Thread
 {
+	public StartupThread()
+	{
+		super("Startup");
+	}
+	
 	@Override
 	public void run()
 	{
 		DyvilInstaller.setInstallMessage("Determining Installation Directory...");
 		DyvilInstaller.setInstallDirectory(getInstallDirectory());
 		
+		DyvilInstaller.setInstallMessage("Fetching versions...");
 		try
 		{
 			URL url = new URL("https://raw.githubusercontent.com/Dyvil/Dyvil-Installer/master/versions.txt");

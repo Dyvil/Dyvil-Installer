@@ -1,0 +1,28 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'application'
+
+archivesBaseName = 'dyvil-installer'
+group = 'dyvil-team'
+version = '0.1.0'
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'dyvil.tools.installer.DyvilInstaller'
+    }
+}
+
+def ENV = System.getenv()
+if (ENV.DRONE_BUILD_NUMBER) {
+    version += ".nightly_" + ENV.DRONE_BUILD_NUMBER
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+/**
+ * Creates the Gradle Wrapper (gradlew)
+ */
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.5'
+}

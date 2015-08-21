@@ -16,6 +16,7 @@ public class InstallThread extends Thread
 	
 	public InstallThread(Version version, File installDirectory, int components)
 	{
+		super("Install-" + version.identifier);
 		this.version = version;
 		this.installDirectory = installDirectory;
 		this.components = components;
