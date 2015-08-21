@@ -49,18 +49,19 @@ public class InstallThread extends Thread
 		case REPL:
 		{
 			File f = new File(bin, "dyvil");
-			download(f, "REPL Launcher", "https://raw.githubusercontent.com/Dyvil/Dyvil-Installer/master/scripts/dyvil");
+			download(f, "REPL Launcher", "https://raw.githubusercontent.com/Dyvil/Dyvil/master/scripts/dyvil");
 			f.setExecutable(true);
 		}
 		case DEV_TOOLS:
 		{
 			File f = new File(bin, "dyvilc");
-			download(f, "Compiler Launcher", "https://raw.githubusercontent.com/Dyvil/Dyvil-Installer/master/scripts/dyvilc");
+			download(f, "Compiler Launcher", "https://raw.githubusercontent.com/Dyvil/Dyvil/master/scripts/dyvilc");
 			f.setExecutable(true);
 		}
 		}
 		
 		DyvilInstaller.setInstallMessage("Downloading Text resources");
+		download(new File(dir, "Changelog.txt"), "Changelog", "https://raw.githubusercontent.com/Dyvil/Dyvil/master/Changelog.txt");
 		download(new File(license, "ASM-LICENSE.txt"), "ASM License", "https://raw.githubusercontent.com/Dyvil/Dyvil/master/ASM-LICENSE.txt");
 		download(new File(license, "LICENSE.txt"), "ASM License", "https://raw.githubusercontent.com/Dyvil/Dyvil/master/LICENSE.txt");
 		
