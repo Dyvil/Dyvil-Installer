@@ -1,6 +1,7 @@
 package dyvil.tools.installer;
 
 import java.io.*;
+import java.net.HttpURLConnection;
 import java.net.URL;
 
 import javax.swing.JOptionPane;
@@ -26,7 +27,9 @@ public class InstallThread extends Thread
 	public void run()
 	{
 		String version = this.version.identifier;
+		DyvilInstaller.setInstallPercentage(1F / 4F);
 		DyvilInstaller.setInstallMessage("Downloading Required Libraries for Dyvil v" + version);
+		
 		File dir = new File(this.installDirectory, version);
 		File lib = new File(dir, "lib");
 		File bin = new File(dir, "bin");
@@ -42,6 +45,7 @@ public class InstallThread extends Thread
 			download(new File(lib, "dyvil-compiler.jar"), "Dyvil Compiler Library", this.version.compilerURL);
 		}
 		
+		DyvilInstaller.setInstallPercentage(2F / 4F);
 		DyvilInstaller.setInstallMessage("Downloading Scripts");
 		switch (this.components)
 		{
@@ -60,12 +64,14 @@ public class InstallThread extends Thread
 		}
 		}
 		
+		DyvilInstaller.setInstallPercentage(3F / 4F);
 		DyvilInstaller.setInstallMessage("Downloading Text resources");
 		download(new File(dir, "Changelog.txt"), "Changelog", "https://raw.githubusercontent.com/Dyvil/Dyvil/master/Changelog.txt");
 		download(new File(license, "ASM-LICENSE.txt"), "ASM License", "https://raw.githubusercontent.com/Dyvil/Dyvil/master/ASM-LICENSE.txt");
 		download(new File(license, "LICENSE.txt"), "ASM License", "https://raw.githubusercontent.com/Dyvil/Dyvil/master/LICENSE.txt");
 		
 		DyvilInstaller.setDownloadMessage("");
+		DyvilInstaller.setInstallPercentage(1F);
 		DyvilInstaller.setInstallMessage("Installation Successful");
 	}
 	
@@ -97,16 +103,30 @@ public class InstallThread extends Thread
 		}
 		
 		DyvilInstaller.setDownloadMessage("Downloading " + name + "...");
-		try (InputStream is = new URL(url).openStream(); OutputStream os = new BufferedOutputStream(new FileOutputStream(dest)))
+		try
 		{
-			byte[] buf = new byte[4096];
-			int read = 0;
-			while ((read = is.read(buf, 0, 4096)) >= 0)
+			HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
+			int length = connection.getContentLength();
+			
+			try (InputStream is = connection.getInputStream(); OutputStream os = new BufferedOutputStream(new FileOutputStream(dest)))
 			{
-				os.write(buf, 0, read);
+				byte[] buf = new byte[1024];
+				int read = 0;
+				int totalRead = 0;
+				while ((read = is.read(buf, 0, 1024)) >= 0)
+				{
+					os.write(buf, 0, read);
+					
+					totalRead += read;
+					DyvilInstaller.setDownloadPercentage((float) totalRead / (float) length);
+				}
+			}
+			catch (IOException ex)
+			{
+				error("Failed to download " + name + ": " + ex.getMessage());
 			}
 		}
-		catch (IOException ex)
+		catch (Exception ex)
 		{
 			error("Failed to download " + name + ": " + ex.getMessage());
 		}

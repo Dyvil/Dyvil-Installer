@@ -57,6 +57,7 @@ public class DyvilInstaller
 	public static void setDownloadMessage(String message)
 	{
 		instance.progressBarDownload.setString(message);
+		instance.progressBarDownload.setValue(0);
 	}
 	
 	public static void setInstallMessage(String message)
@@ -123,6 +124,7 @@ public class DyvilInstaller
 		this.frame.getContentPane().add(this.progressBarInstall);
 		
 		this.progressBarDownload = new JProgressBar();
+		this.progressBarDownload.setMinimum(0);
 		this.progressBarDownload.setMaximum(100);
 		this.progressBarDownload.setBounds(6, 127, 388, 20);
 		this.frame.getContentPane().add(this.progressBarDownload);
