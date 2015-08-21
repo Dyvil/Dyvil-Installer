@@ -6,9 +6,11 @@ archivesBaseName = 'dyvil-installer'
 group = 'dyvil-team'
 version = '0.1.0'
 
+mainClassName = 'dyvil.tools.installer.DyvilInstaller'
+
 jar {
     manifest {
-        attributes 'Main-Class': 'dyvil.tools.installer.DyvilInstaller'
+        attributes 'Main-Class': mainClassName
     }
 }
 
