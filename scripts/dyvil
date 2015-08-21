@@ -1,2 +1,4 @@
 #!/usr/bin/env bash
+DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+DYVIL_HOME=$DIR/..
 java -jar $DYVIL_HOME/lib/dyvil-repl.jar -classpath $DYVIL_HOME/lib/dyvil-compiler.jar $DYVIL_HOME/lib/dyvil-library.jar "$@"
