@@ -133,9 +133,4 @@ public class InstallThread extends Thread
 		
 		DyvilInstaller.setDownloadMessage("Successfully Downloaded " + name);
 	}
-	
-	private static void write(File dir, String text)
-	{
-	
-	}
 }

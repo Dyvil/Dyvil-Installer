@@ -1,5 +1,6 @@
 package dyvil.tools.installer;
 
+import java.io.File;
 import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
@@ -30,11 +31,20 @@ public class StartupThread extends Thread
 			String content = new String(bytebuf.array(), 0, bytebuf.position(), StandardCharsets.UTF_8);
 			
 			int versions = readVersionFile(content);
-			DyvilInstaller.setInstallMessage("Fetched " + versions + " versions");
+			
+			if (versions == 0)
+			{
+				DyvilInstaller.setInstallMessage("Fetched 1 version");
+			}
+			else
+			{
+				DyvilInstaller.setInstallMessage("Fetched " + versions + " versions");
+			}
 		}
 		catch (Exception ex)
 		{
 			DyvilInstaller.setInstallMessage("Could not fetch version list");
+			ex.printStackTrace();
 		}
 		
 		try
@@ -90,7 +100,7 @@ public class StartupThread extends Thread
 		String os = System.getProperty("os.name").toUpperCase();
 		if (os.contains("WIN"))
 		{
-			return System.getenv("ProgramFiles") + "/Dyvil";
+			return System.getenv("ProgramFiles") + "\\Dyvil";
 		}
 		else if (os.contains("MAC"))
 		{
@@ -100,6 +110,6 @@ public class StartupThread extends Thread
 		{
 			return System.getProperty("user.home") + "/Dyvil";
 		}
-		return System.getProperty("user.dir") + "/Dyvil";
+		return System.getProperty("user.dir") + File.separator + "Dyvil";
 	}
 }
