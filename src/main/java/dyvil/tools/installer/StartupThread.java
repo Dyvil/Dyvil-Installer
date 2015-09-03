@@ -23,7 +23,7 @@ public class StartupThread extends Thread
 		DyvilInstaller.setInstallMessage("Fetching versions...");
 		try
 		{
-			URL url = new URL("https://raw.githubusercontent.com/Dyvil/Dyvil-Installer/master/versions.txt");
+			URL url = new URL("https://raw.githubusercontent.com/Dyvil/Dyvil/master/versions.txt");
 			ReadableByteChannel rbc = Channels.newChannel(url.openStream());
 			
 			ByteBuffer bytebuf = ByteBuffer.allocate(1024);
