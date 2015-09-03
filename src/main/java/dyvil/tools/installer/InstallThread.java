@@ -53,13 +53,15 @@ public class InstallThread extends Thread
 		case REPL:
 		{
 			File f = new File(bin, "dyvil");
-			download(f, "REPL Launcher", "https://raw.githubusercontent.com/Dyvil/Dyvil/master/scripts/dyvil");
+			download(f, "REPL Launcher (bash)", "https://raw.githubusercontent.com/Dyvil/Dyvil/master/scripts/dyvil");
+			download(new File(bin, "dyvil.bat"), "REPL Launcher (batch)", "https://raw.githubusercontent.com/Dyvil/Dyvil/master/scripts/dyvil.bat");
 			f.setExecutable(true);
 		}
 		case DEV_TOOLS:
 		{
 			File f = new File(bin, "dyvilc");
-			download(f, "Compiler Launcher", "https://raw.githubusercontent.com/Dyvil/Dyvil/master/scripts/dyvilc");
+			download(f, "Compiler Launcher (bash)", "https://raw.githubusercontent.com/Dyvil/Dyvil/master/scripts/dyvilc");
+			download(new File(bin, "dyvilc.bat"), "Compiler Launcher (batch)", "https://raw.githubusercontent.com/Dyvil/Dyvil/master/scripts/dyvilc.bat");
 			f.setExecutable(true);
 		}
 		}
