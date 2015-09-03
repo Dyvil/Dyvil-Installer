@@ -4,7 +4,7 @@ apply plugin: 'application'
 
 archivesBaseName = 'dyvil-installer'
 group = 'dyvil-team'
-version = '0.1.1'
+version = '0.1.2'
 
 mainClassName = 'dyvil.tools.installer.DyvilInstaller'
 
