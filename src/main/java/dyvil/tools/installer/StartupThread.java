@@ -7,6 +7,16 @@ import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.charset.StandardCharsets;
 
+import dyvil.collection.Entry;
+import dyvil.collection.List;
+import dyvil.collection.Map;
+import dyvil.collection.mutable.ArrayList;
+import dyvil.collection.mutable.HashMap;
+import dyvil.tools.dpf.Parser;
+import dyvil.tools.installer.util.Expandable;
+import dyvil.tools.installer.util.MapConverter;
+import dyvil.tools.parsing.marker.MarkerList;
+
 public class StartupThread extends Thread
 {
 	public StartupThread()
@@ -23,7 +33,7 @@ public class StartupThread extends Thread
 		DyvilInstaller.setInstallMessage("Fetching versions...");
 		try
 		{
-			URL url = new URL("https://raw.githubusercontent.com/Dyvil/Dyvil/master/versions.txt");
+			URL url = new URL("https://raw.githubusercontent.com/Dyvil/Dyvil/master/versions/versions.dyp");
 			ReadableByteChannel rbc = Channels.newChannel(url.openStream());
 			
 			ByteBuffer bytebuf = ByteBuffer.allocate(1024);
@@ -32,7 +42,7 @@ public class StartupThread extends Thread
 			
 			int versions = readVersionFile(content);
 			
-			if (versions == 0)
+			if (versions == 1)
 			{
 				DyvilInstaller.setInstallMessage("Fetched 1 version");
 			}
@@ -60,39 +70,29 @@ public class StartupThread extends Thread
 	
 	private static int readVersionFile(String content)
 	{
-		String[] lines = content.split("\n");
-		int versions = 0;
+		Parser parser = new Parser(new MarkerList(), content);
+		Map<String, Object> map = new HashMap<String, Object>();
+		MapConverter converter = new MapConverter(map);
+		parser.accept(converter);
 		
-		Version version = null;
-		for (String s : lines)
+		Map<String, Object> versionFiles = ((Map<String, Object>) map.get("versionFiles"));
+		List<Version> versions = new ArrayList();
+		
+		for (Entry<String, Object> entry : versionFiles)
 		{
-			if (s.isEmpty())
+			Object value = entry.getValue();
+			if (value instanceof Expandable)
 			{
-				continue;
+				value = ((Expandable) value).expand(map);
 			}
-			
-			int index = s.indexOf(':');
-			if (index < 0)
-			{
-				if (version != null)
-				{
-					DyvilInstaller.addVersion(version);
-					versions++;
-				}
-				version = new Version(s);
-			}
-			else if (version != null)
-			{
-				version.setURL(s.substring(0, index), s.substring(index + 1));
-			}
+			versions.add(new Version(entry.getKey(), value.toString()));
 		}
 		
-		if (version != null)
+		for (Version version : versions.sorted())
 		{
 			DyvilInstaller.addVersion(version);
-			return versions + 1;
 		}
-		return versions;
+		return versions.size();
 	}
 	
 	private static String getInstallDirectory()

@@ -26,55 +26,7 @@ public class InstallThread extends Thread
 	@Override
 	public void run()
 	{
-		String version = this.version.identifier;
-		DyvilInstaller.setInstallPercentage(1F / 4F);
-		DyvilInstaller.setInstallMessage("Downloading Required Libraries for Dyvil v" + version);
 		
-		File dir = new File(this.installDirectory, version);
-		File lib = new File(dir, "lib");
-		File bin = new File(dir, "bin");
-		File license = new File(dir, "license");
-		
-		download(new File(lib, "dyvil-library.jar"), "Dyvil Library", this.version.libraryURL);
-		switch (this.components)
-		{
-		case REPL | DEV_TOOLS:
-		case REPL:
-			download(new File(lib, "dyvil-repl.jar"), "Dyvil REPL Library", this.version.replURL);
-		case DEV_TOOLS:
-			download(new File(lib, "dyvil-compiler.jar"), "Dyvil Compiler Library", this.version.compilerURL);
-		}
-		
-		DyvilInstaller.setInstallPercentage(2F / 4F);
-		DyvilInstaller.setInstallMessage("Downloading Scripts");
-		switch (this.components)
-		{
-		case REPL | DEV_TOOLS:
-		case REPL:
-		{
-			File f = new File(bin, "dyvil");
-			download(f, "REPL Launcher (bash)", "https://raw.githubusercontent.com/Dyvil/Dyvil/master/scripts/dyvil");
-			download(new File(bin, "dyvil.bat"), "REPL Launcher (batch)", "https://raw.githubusercontent.com/Dyvil/Dyvil/master/scripts/dyvil.bat");
-			f.setExecutable(true);
-		}
-		case DEV_TOOLS:
-		{
-			File f = new File(bin, "dyvilc");
-			download(f, "Compiler Launcher (bash)", "https://raw.githubusercontent.com/Dyvil/Dyvil/master/scripts/dyvilc");
-			download(new File(bin, "dyvilc.bat"), "Compiler Launcher (batch)", "https://raw.githubusercontent.com/Dyvil/Dyvil/master/scripts/dyvilc.bat");
-			f.setExecutable(true);
-		}
-		}
-		
-		DyvilInstaller.setInstallPercentage(3F / 4F);
-		DyvilInstaller.setInstallMessage("Downloading Text resources");
-		download(new File(dir, "Changelog.txt"), "Changelog", "https://raw.githubusercontent.com/Dyvil/Dyvil/master/Changelog.txt");
-		download(new File(license, "ASM-LICENSE.txt"), "ASM License", "https://raw.githubusercontent.com/Dyvil/Dyvil/master/ASM-LICENSE.txt");
-		download(new File(license, "LICENSE.txt"), "ASM License", "https://raw.githubusercontent.com/Dyvil/Dyvil/master/LICENSE.txt");
-		
-		DyvilInstaller.setDownloadMessage("");
-		DyvilInstaller.setInstallPercentage(1F);
-		DyvilInstaller.setInstallMessage("Installation Successful");
 	}
 	
 	private static void error(String message)
