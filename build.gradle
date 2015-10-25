@@ -1,30 +1,55 @@
+// ---------------------------------------- Plugins ----------------------------------------
+
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'application'
 
-archivesBaseName = 'dyvil-installer'
-group = 'dyvil-team'
-version = '0.1.2'
+// ---------------------------------------- Main Settings ----------------------------------------
 
-mainClassName = 'dyvil.tools.installer.DyvilInstaller'
+archivesBaseName	=	'dyvil-installer'
+group				=	'dyvil-team'
+version				=	'0.1.2'
 
-jar {
-    manifest {
-        attributes 'Main-Class': mainClassName
-    }
-}
+mainClassName		=	'dyvil.tools.installer.DyvilInstaller'
 
-def ENV = System.getenv()
+// ---------------------------------------- Nightly Versioning ----------------------------------------
+
+Map<String, String> ENV = System.getenv()
 if (ENV.DRONE_BUILD_NUMBER) {
-    version += ".nightly_" + ENV.DRONE_BUILD_NUMBER
+	version += "+nightly." + ENV.DRONE_BUILD_NUMBER
 }
+
+// ---------------------------------------- Source Settings ----------------------------------------
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
+
+// ---------------------------------------- Dependencies ----------------------------------------
+
+dependencies {
+    compile fileTree(dir: 'libs', include: '*.jar')
+}
+
+// ---------------------------------------- Jar Settings ----------------------------------------
+
+
+jar {
+    from {
+    	// Package dependencies in the Jar
+		configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+	}
+	
+	manifest {
+		attributes 'Main-Class': mainClassName
+	}
+}
+
+// ---------------------------------------- Wrapper ----------------------------------------
+
 
 /**
  * Creates the Gradle Wrapper (gradlew)
  */
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.5'
+	gradleVersion = '2.5'
 }
