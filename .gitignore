@@ -7,5 +7,8 @@ build/
 
 .classpath
 .project
+.idea
 
 .settings/org.eclipse.jdt.core.prefs
+
+Dyvil-Installer.iml

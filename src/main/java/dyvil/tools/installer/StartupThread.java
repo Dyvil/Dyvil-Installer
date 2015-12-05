@@ -1,12 +1,5 @@
 package dyvil.tools.installer;
 
-import java.io.File;
-import java.net.URL;
-import java.nio.ByteBuffer;
-import java.nio.channels.Channels;
-import java.nio.channels.ReadableByteChannel;
-import java.nio.charset.StandardCharsets;
-
 import dyvil.collection.Entry;
 import dyvil.collection.List;
 import dyvil.collection.Map;
@@ -16,6 +9,13 @@ import dyvil.tools.dpf.Parser;
 import dyvil.tools.installer.util.Expandable;
 import dyvil.tools.installer.util.MapConverter;
 import dyvil.tools.parsing.marker.MarkerList;
+
+import java.io.File;
+import java.net.URL;
+import java.nio.ByteBuffer;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
+import java.nio.charset.StandardCharsets;
 
 public class StartupThread extends Thread
 {
@@ -27,10 +27,10 @@ public class StartupThread extends Thread
 	@Override
 	public void run()
 	{
-		DyvilInstaller.setInstallMessage("Determining Installation Directory...");
-		DyvilInstaller.setInstallDirectory(getInstallDirectory());
+		DyvilInstaller.gui.setInstallMessage("Determining Installation Directory...");
+		DyvilInstaller.gui.setInstallDirectory(getInstallDirectory());
 		
-		DyvilInstaller.setInstallMessage("Fetching versions...");
+		DyvilInstaller.gui.setInstallMessage("Fetching versions...");
 		try
 		{
 			URL url = new URL("https://raw.githubusercontent.com/Dyvil/Dyvil/master/versions/versions.dyp");
@@ -44,16 +44,16 @@ public class StartupThread extends Thread
 			
 			if (versions == 1)
 			{
-				DyvilInstaller.setInstallMessage("Fetched 1 version");
+				DyvilInstaller.gui.setInstallMessage("Fetched 1 version");
 			}
 			else
 			{
-				DyvilInstaller.setInstallMessage("Fetched " + versions + " versions");
+				DyvilInstaller.gui.setInstallMessage("Fetched " + versions + " versions");
 			}
 		}
 		catch (Exception ex)
 		{
-			DyvilInstaller.setInstallMessage("Could not fetch version list");
+			DyvilInstaller.gui.setInstallMessage("Could not fetch version list");
 			ex.printStackTrace();
 		}
 		
@@ -65,7 +65,7 @@ public class StartupThread extends Thread
 		{
 		}
 		
-		DyvilInstaller.setInstallMessage("");
+		DyvilInstaller.gui.setInstallMessage("");
 	}
 	
 	private static int readVersionFile(String content)
@@ -76,7 +76,7 @@ public class StartupThread extends Thread
 		parser.accept(converter);
 		
 		Map<String, Object> versionFiles = ((Map<String, Object>) map.get("versionFiles"));
-		List<Version> versions = new ArrayList();
+		List<Version> versions = new ArrayList<>();
 		
 		for (Entry<String, Object> entry : versionFiles)
 		{
@@ -90,7 +90,7 @@ public class StartupThread extends Thread
 		
 		for (Version version : versions.sorted())
 		{
-			DyvilInstaller.addVersion(version);
+			DyvilInstaller.gui.addVersion(version);
 		}
 		return versions.size();
 	}

@@ -1,10 +1,9 @@
 package dyvil.tools.installer;
 
+import javax.swing.*;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
-
-import javax.swing.JOptionPane;
 
 public class InstallThread extends Thread
 {
@@ -56,7 +55,7 @@ public class InstallThread extends Thread
 			return;
 		}
 		
-		DyvilInstaller.setDownloadMessage("Downloading " + name + "...");
+		DyvilInstaller.gui.setDownloadMessage("Downloading " + name + "...");
 		try
 		{
 			HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
@@ -72,7 +71,7 @@ public class InstallThread extends Thread
 					os.write(buf, 0, read);
 					
 					totalRead += read;
-					DyvilInstaller.setDownloadPercentage((float) totalRead / (float) length);
+					DyvilInstaller.gui.setDownloadPercentage((float) totalRead / (float) length);
 				}
 			}
 			catch (IOException ex)
@@ -85,6 +84,6 @@ public class InstallThread extends Thread
 			error("Failed to download " + name + ": " + ex.getMessage());
 		}
 		
-		DyvilInstaller.setDownloadMessage("Successfully Downloaded " + name);
+		DyvilInstaller.gui.setDownloadMessage("Successfully Downloaded " + name);
 	}
 }

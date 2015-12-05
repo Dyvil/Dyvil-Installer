@@ -26,8 +26,16 @@ targetCompatibility = 1.8
 
 // ---------------------------------------- Dependencies ----------------------------------------
 
+repositories {
+	mavenCentral()
+}
+
 dependencies {
     compile fileTree(dir: 'libs', include: '*.jar')
+
+	// JGoodies FormLayout
+	compile 'com.jgoodies:jgoodies-common:1.8.1'
+	compile 'com.jgoodies:jgoodies-forms:1.8.0'
 }
 
 // ---------------------------------------- Jar Settings ----------------------------------------
