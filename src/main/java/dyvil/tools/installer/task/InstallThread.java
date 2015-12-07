@@ -1,4 +1,7 @@
-package dyvil.tools.installer;
+package dyvil.tools.installer.task;
+
+import dyvil.tools.installer.DyvilInstaller;
+import dyvil.tools.installer.version.Version;
 
 import javax.swing.*;
 import java.io.*;
@@ -10,13 +13,13 @@ public class InstallThread extends Thread
 	public static final byte	DEV_TOOLS	= 1;
 	public static final byte	REPL		= 2;
 	
-	private final Version	version;
-	private final File		installDirectory;
-	private final int		components;
+	private final Version version;
+	private final File    installDirectory;
+	private final int     components;
 	
 	public InstallThread(Version version, File installDirectory, int components)
 	{
-		super("Install-" + version.identifier);
+		super("Install-" + version.getIdentifier());
 		this.version = version;
 		this.installDirectory = installDirectory;
 		this.components = components;

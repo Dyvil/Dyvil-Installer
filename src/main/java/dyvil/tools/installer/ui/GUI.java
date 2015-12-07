@@ -1,13 +1,15 @@
 package dyvil.tools.installer.ui;
 
-import dyvil.tools.installer.InstallThread;
-import dyvil.tools.installer.Version;
+import dyvil.tools.installer.task.InstallThread;
+import dyvil.tools.installer.version.Version;
+import dyvil.tools.installer.task.VersionSelectThread;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ItemEvent;
 import java.io.File;
 
 public class GUI extends JFrame
@@ -51,11 +53,21 @@ public class GUI extends JFrame
 		this.buttonInstall.addActionListener(this::install);
 		this.buttonCancel.addActionListener(this::exit);
 		this.buttonPathSelect.addActionListener(this::selectInstallDirectory);
+		this.comboBoxVersion.addItemListener(e -> {
+			if (e.getStateChange() == ItemEvent.SELECTED)
+			{
+				displayVersion((Version) e.getItem());
+			}
+		});
 
 		this.rootNode = new DefaultMutableTreeNode("Select a Version");
-		this.rootNode.add(new DefaultMutableTreeNode("test"));
 		this.treeModel = new DefaultTreeModel(this.rootNode);
 		this.tree.setModel(this.treeModel);
+	}
+
+	private void displayVersion(Version item)
+	{
+		new VersionSelectThread(item).start();
 	}
 
 	private void selectInstallDirectory(ActionEvent actionEvent)
@@ -120,5 +132,13 @@ public class GUI extends JFrame
 
 		int components = 0;
 		new InstallThread((Version) version, directory, components).start();
+	}
+
+	public void setTreeNode(DefaultMutableTreeNode treeNode)
+	{
+		this.rootNode = treeNode;
+		this.treeModel.setRoot(treeNode);
+
+		this.tree.repaint();
 	}
 }
